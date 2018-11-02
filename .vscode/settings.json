@@ -1,0 +1,25 @@
+{
+    "cSpell.words": [
+        "KHTML",
+        "bfads",
+        "bfextract",
+        "clientip",
+        "imgur",
+        "mkdir",
+        "tmpbfextract",
+        "tmpimgur"
+    ],
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": false,
+    "editor.formatOnSave": false,
+    "python.unitTest.unittestArgs": [
+        "-v",
+        "-s",
+        "./src",
+        "-p",
+        "test*.py"
+    ],
+    "python.unitTest.pyTestEnabled": false,
+    "python.unitTest.nosetestsEnabled": false,
+    "python.unitTest.unittestEnabled": true
+}
