@@ -31,9 +31,7 @@ class Album:
 
         self.server_url = connection.server_url
         self.client_id = connection.client_id
-        self.album_url = 'https://imgur.com/a/{}'.format(
-            connection.server_url,
-            album_id)
+        self.album_url = 'https://imgur.com/a/{}'.format(album_id)
 
     def set_album_deletehash(self, album_deletehash):
         """"""
@@ -74,3 +72,32 @@ class Album:
             raise ValueError(json_data["data"]["error"])
 
         return json_data["data"]["id"]
+
+    def update_title(self, new_title: str):
+
+        url = "{}/3/album/{}".format(self.server_url, self.album_deletehash)
+
+        payload = (
+            '------WebKitFormBoundary7MA4YWxkTrZu0gW\r\n'
+            'Content-Disposition: form-data; name="title"\r\n\r\n'
+            '{}\r\n' 
+            '------WebKitFormBoundary7MA4YWxkTrZu0gW--'.format(
+                new_title))
+
+        headers = {
+            'content-type': "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
+            'Authorization': "Client-ID {}".format(self.client_id)}
+
+        response = requests.request("PUT", url, data=payload, headers=headers)
+        response.raise_for_status
+
+        json_data = response.json()
+        
+        if not json_data:
+            return None
+
+        if not json_data['success'] and "error" in json_data["data"]:
+            raise ValueError(json_data["data"]["error"]["message"])
+
+        self.album_title = new_title
+

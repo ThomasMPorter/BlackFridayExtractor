@@ -45,9 +45,9 @@ class Connection:
             json_data["data"]["deletehash"],
             album_title)
 
-    def get_album(self, album_deletehash: str):
+    def get_album(self, album_id: str):
 
-        url = "{}/3/album/{}".format(self.server_url, album_deletehash)
+        url = "{}/3/album/{}".format(self.server_url, album_id)
 
         headers = {'Authorization': 'Client-ID {}'.format(self.client_id)}
 

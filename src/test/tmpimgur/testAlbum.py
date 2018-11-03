@@ -21,6 +21,25 @@ class testConnection(unittest.TestCase):
         # Assert
         self.assertIsNotNone(actual)
 
+    def test_update_title(self):
+        # Arrange
+        album = get_test_album()
+        expected = config['unittest']['test_new_title']
+
+        # Act
+        album.update_title(expected)
+
+        updated_album = get_test_album()
+
+        actual = updated_album.album_title
+        
+        reset = config['unittest']['exist_album_title']
+
+        album.update_title(reset)
+
+        # Assert
+        self.assertEqual(actual, expected)
+
 
 config = configparser.ConfigParser()
 config.read(cfg_file)

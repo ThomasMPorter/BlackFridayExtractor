@@ -88,6 +88,7 @@ elif extract_type == 'imgur':
 
         try:
             imgur_album = imgur_connection.get_album(album_id)
+            imgur_album.set_album_deletehash(album_deletehash)
         except ValueError as ex:
             logging.error(
                 'Whoa, issue getting album! id: %s; message: %s',
@@ -102,7 +103,7 @@ elif extract_type == 'imgur':
         logging.info("Making spanking new album")
 
         imgur_album = imgur_connection.create_album(album_title)
-        f = open("ImgurAlbum.csv", "a")
+        f = open("{}\\ImgurAlbum.csv".format(config['BFExtract']['local_path']), "a")
         f.write(
             "{},{},{}".format(
                 imgur_album.album_id,
