@@ -9,7 +9,7 @@ cfg_file = 'src/local.cfg'
 #----------------------------
 
 
-class testExtractGottadeal(unittest.TestCase):
+class testExtractBlackfriday(unittest.TestCase):
 
     def test_get_image_url_list(self):
         # Arrange
@@ -29,8 +29,9 @@ config.read(cfg_file)
 
 
 def get_test_extract():
-    return tmpbfextract.ExtractGottadeal(
-        config['unittest']['test_gottadeal_store_name'])
+    return tmpbfextract.ExtractBlackfriday(
+        config['unittest']['test_blackfriday_store_name'],
+        config['unittest']['test_blackfriday_type_of_ad'])
 
 
 if __name__ == '__main__':

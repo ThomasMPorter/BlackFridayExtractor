@@ -3,20 +3,22 @@ import requests
 from bs4 import BeautifulSoup
 
 
-class ExtractGottadeal:
+class ExtractBlackfriday:
     """"""
 
     def __init__(
             self,
-            store_name: str):
+            store_name: str, 
+            type_of_ad: str):
         """"""
         self.store_name = store_name
+        self.type_of_ad = type_of_ad
 
     def get_image_url_list(
             self,
             page_start: int,
             page_end: int):
-        """Get the list of Images from gottadeal.com"""
+        """Get the list of Images from Blackfriday.com"""
 
         image_url_list = []
         album_title = None
@@ -27,7 +29,8 @@ class ExtractGottadeal:
 
         while next_button_exists:
 
-            url = 'https://blackfriday.gottadeal.com/BlackFridayScans/{}/{}'.format(
+            url = 'https://blackfriday.com/ads/{}/{}/{}'.format(
+                self.type_of_ad,
                 self.store_name,
                 page)
 
@@ -38,21 +41,21 @@ class ExtractGottadeal:
 
             soup = BeautifulSoup(result.text, 'html.parser')
 
-            if not album_title: 
-                title_span = soup.find('span', attrs={'class': 'header_titles'})
-                album_title = title_span.find(text=True)
+            if not album_title:
+                title_div = soup.find('div', attrs={'class': 'pure-u-1'}) 
+                album_title = title_div.find('h1').find(text=True)
 
-            div = soup.find('div', attrs={'class': 'wide_card_scan_pages'})
+            print_ad = soup.find('print-ad')
 
-            img = div.find('img')
-
-            image_url_list.append(img['src'])
+            image_url_list.append(print_ad['image-url'])
 
             if page_end and page == page_end:
                 break
 
             page += 1
 
-            next_button_exists = soup.find('a', text='Next')
+            next_button = soup.find('i', attrs={'class': 'fa fa-angle-right'})
+
+            next_button_exists = (next_button.parent.name == 'a')
 
         return image_url_list, album_title

@@ -20,44 +20,55 @@ logging.info("Reticulating Splines")
 
 config = configparser.ConfigParser()
 config.read(cfg_file)
-extract_type = config['BFExtract']['extract_type']
-website = config['BFExtract']['website']
-store_name = config['BFExtract']['store_name']
+source = config['BFExtract']['source']
+destination = config['BFExtract']['destination']
 page_start = int(config['BFExtract']['page_start'])
 page_end = int(config['BFExtract']['page_end'])
 
 extract = None
 
-if website == 'bfads':
-    logging.info("Go Go Gadget bfads.net!")
+if source == 'BFAds':
+    logging.info("Go Go Gadget BFAds!")
     type_of_ad = config['BFAds']['type_of_ad']
+    store_name = config['BFAds']['store_name']
     extract = tmpbfextract.ExtractBfads(store_name, type_of_ad)
-elif website == 'gottadeal':
+elif source == 'BlackFriday':
+    logging.info("Go Go Gadget BlackFriday!")
+    type_of_ad = config['BlackFriday']['type_of_ad']
+    store_name = config['BlackFriday']['store_name']
+    extract = tmpbfextract.ExtractBlackfriday(store_name, type_of_ad)
+elif source == 'GottaDEAL':
     logging.info("Go Go Gadget GottaDEAL!")
+    store_name = config['GottaDEAL']['store_name']
     extract = tmpbfextract.ExtractGottadeal(store_name)
 
 if not extract:
-    logging.info('Select a valid website in your config friend! Good-bye!')
+    logging.info('Select a valid source in your config friend! Good-bye!')
     sys.exit(0)
 
 logging.info("Extracting the images, please wait..")
 
-image_url_list = extract.get_image_url_list(page_start, page_end)
+image_url_list, album_title = extract.get_image_url_list(page_start, page_end)
 
-if not image_url_list:
-    logging.info('Aww, nothing for {} yet! Try again later my dude!'.format(
-        store_name))
+if not album_title:
+    logging.info("Yipes! Couldn't get the album title! Bye-Bye for now!")
     sys.exit(0)
 
-if extract_type == 'local':
+if not image_url_list:
+    logging.info(
+        'Aww, nothing for %s yet! Try again later my dude!',
+        store_name)
+    sys.exit(0)
+
+if destination == 'local':
 
     logging.info("Saving those puppies locally for you!")
 
-    path = website = "{}\\{}".format(config['BFExtract']['local_path'], store_name)
+    path=source="{}\\{}".format(config['BFExtract']['local_path'], store_name)
 
     os.mkdir(path)
 
-    page_number = 1
+    page_number=1
 
     for image_url in image_url_list:
         urllib.request.urlretrieve(
@@ -66,17 +77,16 @@ if extract_type == 'local':
 
     logging.info("Donion Rings!")
 
-elif extract_type == 'imgur':
+elif destination == 'imgur':
 
     logging.info("Let's talk to imgur")
 
-    imgur_url = config['imgur']['url']
-    imgur_client_id = config['imgur']['client_id']
-    album_title = config['imgur']['album_title']
-    album_id = config['ContinueAlbum']['album_id']
-    album_deletehash = config['ContinueAlbum']['album_deletehash']
+    imgur_url=config['imgur']['url']
+    imgur_client_id=config['imgur']['client_id']
+    album_id=config['imgur']['album_id']
+    album_deletehash=config['imgur']['album_deletehash']
 
-    imgur_connection = tmpimgur.Connection(
+    imgur_connection=tmpimgur.Connection(
         imgur_url,
         imgur_client_id)
 

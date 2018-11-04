@@ -20,6 +20,7 @@ class ExtractBfads:
         """Get the list of Images"""
 
         image_url_list = []
+        album_title = None
 
         page = page_start
 
@@ -38,6 +39,10 @@ class ExtractBfads:
             result = requests.get(url, headers=headers)
 
             soup = BeautifulSoup(result.text, 'html.parser')
+
+            if not album_title: 
+                title_h1 = soup.find('h1', attrs={'class': 'heading-store'})
+                album_title = title_h1.find(text=True)
 
             image_url_found = False
 
@@ -61,4 +66,4 @@ class ExtractBfads:
 
             next_button_exists = soup.find('a', attrs={'class': 'next'})
 
-        return image_url_list
+        return image_url_list, album_title

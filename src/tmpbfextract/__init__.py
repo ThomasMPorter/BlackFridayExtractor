@@ -1,6 +1,10 @@
 """"""
 
-from tmpbfextract.ExtractBfads import ExtractBfads
-from tmpbfextract.ExtractGottadeal import ExtractGottadeal
+from .ExtractBfads import ExtractBfads
+from .ExtractGottadeal import ExtractGottadeal
+from .ExtractBlackfriday import ExtractBlackfriday
 
-__all__ = ['ExtractBfads', 'ExtractGottadeal']
+__all__ = [
+    'ExtractBfads',
+    'ExtractGottadeal',
+    'ExtractBlackfriday']
